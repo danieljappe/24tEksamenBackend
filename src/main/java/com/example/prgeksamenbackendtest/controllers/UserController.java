@@ -16,15 +16,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private AuthenticationService authenticationService;
-
-    @PostMapping(value = "/createUser", consumes = "application/json")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User createdUser = userService.createUser(user);
-        // TODO authenticationService.register(createdUser)
-
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    @GetMapping("/get/{username}")
+    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
+        return new ResponseEntity<>(userService.getUserByUsername(username), HttpStatus.OK);
     }
 
 

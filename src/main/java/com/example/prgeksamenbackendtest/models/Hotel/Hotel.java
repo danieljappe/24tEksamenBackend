@@ -9,7 +9,7 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@ToString
+@ToString(exclude = "rooms")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -52,9 +52,4 @@ public class Hotel extends Auditable {
         this.country = country;
         this.rooms = new ArrayList<>();
     }
-
-
-
-
-
 }

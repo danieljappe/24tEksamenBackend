@@ -1,5 +1,9 @@
-package com.example.prgeksamenbackendtest.auth;
+package com.example.prgeksamenbackendtest.controllers;
 
+import com.example.prgeksamenbackendtest.auth.AuthenticationRequest;
+import com.example.prgeksamenbackendtest.auth.AuthenticationResponse;
+import com.example.prgeksamenbackendtest.auth.AuthenticationService;
+import com.example.prgeksamenbackendtest.auth.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

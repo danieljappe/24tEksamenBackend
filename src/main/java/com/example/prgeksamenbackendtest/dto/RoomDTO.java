@@ -16,4 +16,6 @@ public class RoomDTO {
     private int roomPrice;
 
     private Long hotelID;
+
+    private boolean isBooked;
 }

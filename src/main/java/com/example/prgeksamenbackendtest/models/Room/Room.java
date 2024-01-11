@@ -3,6 +3,8 @@ package com.example.prgeksamenbackendtest.models.Room;
 import com.example.prgeksamenbackendtest.models.Auditable;
 import com.example.prgeksamenbackendtest.models.Hotel.Hotel;
 import com.example.prgeksamenbackendtest.models.Reservation.Reservation;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,9 +29,11 @@ public class Room extends Auditable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "hotelID")
+    @JsonBackReference
     private Hotel hotel;
 
     @OneToMany(mappedBy = "room")
+    @JsonManagedReference
     private List<Reservation> reservations;
 
     public Room(int roomNumber, int numberOfBeds, int roomPrice, Hotel hotel) {

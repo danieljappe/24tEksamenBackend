@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/v1/room-controller")
@@ -30,6 +32,13 @@ public class RoomController {
     @Autowired
     private RoomRepository roomRepository;
 
+    @GetMapping("/getRoomsByHotelId/{hotelId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<RoomDTO>> getAllRooms(@PathVariable("hotelId") long hotelId) {
+        List<RoomDTO> rooms = roomService.getAllRoomsFromID(hotelId);
+        return new ResponseEntity<>(rooms, HttpStatus.OK);
+    }
+
     @PostMapping(value = "/addRoom", consumes = "application/json")
     public ResponseEntity<RoomDTO> addRoom(@RequestBody RoomDTO roomDTO, @RequestParam("hotelId") long hotelId) {
         // Find the hotel by ID
@@ -46,7 +55,7 @@ public class RoomController {
         Room savedRoom = roomRepository.save(room);
 
         // Convert saved room back to DTO for response
-        RoomDTO savedRoomDTO = convertToDTO(savedRoom);
+        RoomDTO savedRoomDTO = roomService.convertToDTO(savedRoom);
 
         return new ResponseEntity<>(savedRoomDTO, HttpStatus.CREATED);
     }
@@ -61,13 +70,5 @@ public class RoomController {
         return room;
     }
 
-    private RoomDTO convertToDTO(Room room) {
-        RoomDTO roomDTO = new RoomDTO();
-        roomDTO.setRoomID(room.getRoomID());
-        roomDTO.setRoomNumber(room.getRoomNumber());
-        roomDTO.setNumberOfBeds(room.getNumberOfBeds());
-        roomDTO.setRoomPrice(room.getRoomPrice());
-        roomDTO.setHotelID(room.getHotel().getHotelID());
-        return roomDTO;
-    }
+
 }

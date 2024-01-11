@@ -161,13 +161,8 @@ public class HotelService {
     }
 
     private RoomDTO convertRoomToDTO(Room room) {
-        RoomDTO dto = new RoomDTO();
-        dto.setRoomID(room.getRoomID());
-        dto.setRoomNumber(room.getRoomNumber());
-        dto.setNumberOfBeds(room.getNumberOfBeds());
-        dto.setRoomPrice(room.getRoomPrice());
-        dto.setHotelID(room.getHotel().getHotelID());
-        return dto;
+        RoomDTO roomDTO = roomService.convertToDTO(room);
+        return roomDTO;
     }
 
 

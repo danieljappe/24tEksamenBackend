@@ -1,7 +1,9 @@
 package com.example.prgeksamenbackendtest.Services;
 
 import com.example.prgeksamenbackendtest.Repositories.HotelRepository;
+import com.example.prgeksamenbackendtest.Repositories.ReservationRepository;
 import com.example.prgeksamenbackendtest.Repositories.RoomRepository;
+import com.example.prgeksamenbackendtest.controllers.RoomController;
 import com.example.prgeksamenbackendtest.dto.HotelDTO;
 import com.example.prgeksamenbackendtest.dto.RoomDTO;
 import com.example.prgeksamenbackendtest.models.Hotel.Hotel;
@@ -10,7 +12,10 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RoomService {
@@ -20,6 +25,17 @@ public class RoomService {
 
     @Autowired
     private HotelRepository hotelRepository;
+
+    @Autowired
+    private ReservationRepository reservationRepository;
+
+    public List<RoomDTO> getAllRoomsFromID(long hotelId) {
+        List<Room> rooms = roomRepository.findByHotel_HotelID(hotelId);
+        return rooms.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+
+
 
     public Room createRoom(Room room) {
         return roomRepository.save(room);
@@ -48,6 +64,19 @@ public class RoomService {
         room.setNumberOfBeds(roomDTO.getNumberOfBeds());
         room.setRoomPrice(roomDTO.getRoomPrice());
         // Do not set hotel here as it's already associated and might not change
+    }
+
+    public RoomDTO convertToDTO(Room room) {
+        RoomDTO roomDTO = new RoomDTO();
+        roomDTO.setRoomID(room.getRoomID());
+        roomDTO.setRoomNumber(room.getRoomNumber());
+        roomDTO.setNumberOfBeds(room.getNumberOfBeds());
+        roomDTO.setRoomPrice(room.getRoomPrice());
+        roomDTO.setHotelID(room.getHotel().getHotelID());
+        LocalDate today = LocalDate.now();
+        boolean isBooked = reservationRepository.findByRoomAndDateRange(room, today, today).isPresent();
+        roomDTO.setBooked(isBooked);
+        return roomDTO;
     }
 
 
