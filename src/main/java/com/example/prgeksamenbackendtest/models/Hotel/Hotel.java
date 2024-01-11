@@ -2,6 +2,7 @@ package com.example.prgeksamenbackendtest.models.Hotel;
 
 import com.example.prgeksamenbackendtest.models.Auditable;
 import com.example.prgeksamenbackendtest.models.Room.Room;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,6 +30,7 @@ public class Hotel extends Auditable {
     private String country;
 
     @OneToMany(mappedBy = "hotel")
+    @JsonManagedReference
     private List<Room> rooms = new ArrayList<>();
 
     // Default Constructor
@@ -41,13 +43,18 @@ public class Hotel extends Auditable {
         this.country = country;
     }
 
-    // Constructor for id, navn, adresse og antal værelser
-    public Hotel(Long hotelID, String hotelName, String street, int numberOfRooms) {
+    public Hotel(Long hotelID, String hotelName, String street, String city, String zipCode, String country) {
         this.hotelID = hotelID;
         this.hotelName = hotelName;
         this.street = street;
-        this.rooms = new ArrayList<>(numberOfRooms);
+        this.city = city;
+        this.zipCode = zipCode;
+        this.country = country;
+        // Initialize rooms if necessary, or handle it separately
+        this.rooms = new ArrayList<>();
     }
+
+
 
 
 

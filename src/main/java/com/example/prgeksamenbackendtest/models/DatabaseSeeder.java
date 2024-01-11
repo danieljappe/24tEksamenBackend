@@ -24,7 +24,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        seedHotels(10);
+        seedHotels(5);
     }
 
     // Metode der laver et antal hoteller
