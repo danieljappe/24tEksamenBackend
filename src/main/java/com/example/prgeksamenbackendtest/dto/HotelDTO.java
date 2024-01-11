@@ -24,7 +24,7 @@ public class HotelDTO {
     private List<RoomDTO> rooms;
 
     // Default constructor with rooms
-    public HotelDTO(String hotelName, String street, String city, String zipCode, String country,int numberOfRooms, List<RoomDTO> rooms) {
+    public HotelDTO(String hotelName, String street, String city, String zipCode, String country, List<RoomDTO> rooms) {
         this.hotelName = hotelName;
         this.street = street;
         this.city = city;

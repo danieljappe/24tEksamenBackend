@@ -8,7 +8,7 @@ import lombok.*;
 
 import java.util.List;
 
-@ToString
+@ToString(exclude = "hotel")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,7 +25,7 @@ public class Room extends Auditable {
     private int numberOfBeds;
     private int roomPrice;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "hotelID")
     private Hotel hotel;
 

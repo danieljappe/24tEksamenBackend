@@ -29,7 +29,7 @@ public class Hotel extends Auditable {
     private String zipCode;
     private String country;
 
-    @OneToMany(mappedBy = "hotel")
+    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Room> rooms = new ArrayList<>();
 
@@ -50,7 +50,6 @@ public class Hotel extends Auditable {
         this.city = city;
         this.zipCode = zipCode;
         this.country = country;
-        // Initialize rooms if necessary, or handle it separately
         this.rooms = new ArrayList<>();
     }
 

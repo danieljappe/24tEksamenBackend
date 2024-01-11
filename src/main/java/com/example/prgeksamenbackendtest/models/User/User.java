@@ -35,6 +35,15 @@ public class User extends Auditable implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Reservation> reservations;
 
+    public User(String username, String firstName, String lastName, String email, String password, Role role) {
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        setPassword(password);
+        this.role = role;
+    }
+
     // Security
 
     @Override

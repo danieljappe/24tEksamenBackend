@@ -3,6 +3,7 @@ package com.example.prgeksamenbackendtest.controllers;
 import com.example.prgeksamenbackendtest.Services.HotelService;
 import com.example.prgeksamenbackendtest.dto.HotelDTO;
 import com.example.prgeksamenbackendtest.models.Hotel.Hotel;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,15 +36,41 @@ public class HotelController {
     }
 
 
-    @GetMapping("/{hotelId}")
-    public ResponseEntity<Hotel> getHotel(@PathVariable Long hotelId) {
-        Optional<Hotel> optionalHotel = hotelService.getHotelByID(hotelId);
-        if (optionalHotel.isPresent()) {
-            return ResponseEntity.ok(optionalHotel.get());
+    @GetMapping("/get/{hotelId}")
+    public ResponseEntity<HotelDTO> getHotel(@PathVariable Long hotelId) {
+        Optional<HotelDTO> hotel = hotelService.getHotelByID(hotelId);
+        if (hotel.isPresent()) {
+            return new ResponseEntity<>(hotel.get(), HttpStatus.OK);
         } else {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @PutMapping(value = "/update/{hotelId}", consumes = "application/json")
+    public ResponseEntity<HotelDTO> updateHotel(@PathVariable Long hotelId, @RequestBody HotelDTO hotelDTO) {
+        try {
+            HotelDTO updatedHotel = hotelService.updateHotel(hotelId, hotelDTO);
+            HotelDTO hotel = hotelService.save(updatedHotel);
+            System.out.println("-------------------" + hotel);
+            return new ResponseEntity<>(hotel, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            // Handle other exceptions
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/delete/{hotelId}")
+    public ResponseEntity<Boolean> deleteHotel(@PathVariable Long hotelId) {
+        boolean deleted = hotelService.deleteHotel(hotelId);
+        if (deleted) {
+            return new ResponseEntity<>(true, HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
 
 }

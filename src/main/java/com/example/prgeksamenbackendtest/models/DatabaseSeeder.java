@@ -24,13 +24,13 @@ public class DatabaseSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        seedHotels(5);
+        seedHotels(8 + 1);
     }
 
     // Metode der laver et antal hoteller
     private void seedHotels(int numberOfHotels) {
         // For loop der laver et antal hoteller
-        for (int i = 0; i < numberOfHotels; i++) {
+        for (int i = 1; i < numberOfHotels; i++) {
 
             // Laver et hotel med et navn, adresse, by, postnummer og land
             Hotel hotel = new Hotel("Hotel " + i, "Street " + i, "City", "Zip" + i, "Country");

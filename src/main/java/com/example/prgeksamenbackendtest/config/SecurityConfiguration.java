@@ -27,6 +27,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(
                         auth -> auth
                                 .requestMatchers("/api/v1/hotel-controller/getAll").permitAll()
+                                .requestMatchers("/api/v1/hotel-controller/get/{hotelId}").permitAll()
+                                .requestMatchers("/api/v1/**").permitAll()
                                 .requestMatchers("/api/v1/auth/**").permitAll()
                                 .anyRequest().authenticated()
                 )

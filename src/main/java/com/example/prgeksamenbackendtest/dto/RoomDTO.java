@@ -14,6 +14,6 @@ public class RoomDTO {
     private int roomNumber;
     private int numberOfBeds;
     private int roomPrice;
-    // Reference back to Hotel if needed, otherwise exclude it
-    // private Long hotelID;
+
+    private Long hotelID;
 }
