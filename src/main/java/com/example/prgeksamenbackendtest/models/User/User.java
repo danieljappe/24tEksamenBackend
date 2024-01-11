@@ -1,10 +1,9 @@
-package com.example.prgeksamenbackendtest.user;
+package com.example.prgeksamenbackendtest.models.User;
 
+import com.example.prgeksamenbackendtest.models.Auditable;
+import com.example.prgeksamenbackendtest.models.Reservation.Reservation;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,13 +15,15 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "user")
-public class User implements UserDetails {
+public class User extends Auditable implements UserDetails {
 
     @Id
-    @GeneratedValue
-    private Integer id;
+    @Column(nullable = false, unique = true)
+    private String username;
     private String firstName;
     private String lastName;
     private String email;
@@ -31,6 +32,11 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @OneToMany(mappedBy = "user")
+    private List<Reservation> reservations;
+
+    // Security
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
@@ -38,7 +44,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
     @Override
