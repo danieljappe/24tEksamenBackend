@@ -62,7 +62,7 @@ public class HotelControllerTest {
         this.mockMvc.perform(post("/api/v1/hotel-controller/create")
                         .contentType(APPLICATION_JSON)
                         .content(hotelJson)
-                        .header("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkYW5pZWxqYXBwZSIsImlhdCI6MTcwNDk3NTAzMiwiZXhwIjoxNzA0OTc2NDcyfQ.Y8TZpcovLZC_OJY9A5pT-UU0fImM4PCtuBAiAuZDdVc"))
+                        .header("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwNTAyODc3MSwiZXhwIjoxNzA1MDMwMjExfQ.nnzl1cG01LzVobqvOvI-1OqtzxumHoS9ywD5ZwVwjHM"))
                 .andDo(MockMvcResultHandlers.print()) // This will print the response details
                 .andExpect(status().isCreated())
                 .andExpect(content().json(hotelJson)); // adjust this line based on what you expect in return

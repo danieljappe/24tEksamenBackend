@@ -22,10 +22,11 @@ public class HotelController {
     private HotelService hotelService;
 
     @PostMapping(value = "/create", consumes = "application/json")
-    public ResponseEntity<Hotel> createHotel(@RequestBody Hotel hotel) {
-        Hotel createdHotel = hotelService.createHotel(hotel);
-
-        return new ResponseEntity<>(createdHotel, HttpStatus.CREATED);
+    public ResponseEntity<HotelDTO> createHotel(@RequestBody HotelDTO hotelDTO) {
+        Hotel hotelEntity = hotelService.convertToEntity(hotelDTO);
+        Hotel createdHotel = hotelService.createHotel(hotelEntity);
+        HotelDTO createdHotelDTO = hotelService.convertToDTO(createdHotel);
+        return new ResponseEntity<>(createdHotelDTO, HttpStatus.CREATED);
     }
 
     @GetMapping("/getAll")

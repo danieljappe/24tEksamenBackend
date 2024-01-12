@@ -63,7 +63,7 @@ public class HotelService {
         }
     }
 
-    private Hotel convertToEntity(HotelDTO hotelDTO) {
+    public Hotel convertToEntity(HotelDTO hotelDTO) {
         Hotel hotel = new Hotel();
         // Do not set hotelID if it's a new hotel (hotelID is null or not present in the database)
         if (hotelDTO.getHotelID() != null) {
@@ -77,10 +77,12 @@ public class HotelService {
         hotel.setLastModifiedDate(LocalDateTime.now());
         // Find and set the Room entities
         List<Room> rooms = new ArrayList<>();
-        for (RoomDTO roomDTO : hotelDTO.getRooms()) {
-            Room room = roomService.convertToEntity(roomDTO);
-            room.setHotel(hotel);
-            rooms.add(room);
+        if (hotelDTO.getRooms() != null) { // Null check
+            for (RoomDTO roomDTO : hotelDTO.getRooms()) {
+                Room room = roomService.convertToEntity(roomDTO);
+                room.setHotel(hotel);
+                rooms.add(room);
+            }
         }
         hotel.setRooms(rooms);
         return hotel;
@@ -142,7 +144,7 @@ public class HotelService {
 
     // DTO
 
-    private HotelDTO convertToDTO(Hotel hotel) {
+    public HotelDTO convertToDTO(Hotel hotel) {
         HotelDTO dto = new HotelDTO();
         dto.setHotelID(hotel.getHotelID());
         dto.setHotelName(hotel.getHotelName());

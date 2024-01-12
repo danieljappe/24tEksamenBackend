@@ -1,4 +1,4 @@
-package com.example.prgeksamenbackendtest.models;
+package com.example.prgeksamenbackendtest.inititalization;
 
 import com.example.prgeksamenbackendtest.models.Hotel.Hotel;
 import com.example.prgeksamenbackendtest.Repositories.HotelRepository;
@@ -24,7 +24,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        seedHotels(8 + 1);
+        seedHotels(250 + 1);
     }
 
     // Metode der laver et antal hoteller
