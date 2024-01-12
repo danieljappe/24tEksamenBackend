@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    //private final JwtAuthenticationFilter jwtAuthFilter;
+    private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
 
     @Bean
@@ -28,15 +28,15 @@ public class SecurityConfiguration {
                         auth -> auth
                                 .requestMatchers("/api/v1/hotel-controller/getAll").permitAll()
                                 .requestMatchers("/api/v1/hotel-controller/get/{hotelId}").permitAll()
-                                .requestMatchers("/api/v1/**").permitAll()
+                                .requestMatchers("/api/v1/room-controller/getRoomsByHotelId/**").permitAll()
                                 .requestMatchers("/api/v1/auth/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .authenticationProvider(authenticationProvider);
-                //.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

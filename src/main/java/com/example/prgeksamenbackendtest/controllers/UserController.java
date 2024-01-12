@@ -2,6 +2,7 @@ package com.example.prgeksamenbackendtest.controllers;
 
 import com.example.prgeksamenbackendtest.Services.UserService;
 import com.example.prgeksamenbackendtest.auth.AuthenticationService;
+import com.example.prgeksamenbackendtest.dto.UserDTO;
 import com.example.prgeksamenbackendtest.models.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,8 +18,9 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/get/{username}")
-    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
-        return new ResponseEntity<>(userService.getUserByUsername(username), HttpStatus.OK);
+    public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) {
+        UserDTO userDTO = userService.getUserByUsername(username);
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
 

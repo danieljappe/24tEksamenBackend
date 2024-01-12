@@ -16,11 +16,8 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-@Entity
-@Table(name = "user")
 public class UserDTO {
-    @Id
-    @Column(nullable = false, unique = true)
+
     private String username;
     private String firstName;
     private String lastName;
@@ -28,11 +25,10 @@ public class UserDTO {
     private String password;
     private String token;
 
-    @Enumerated(EnumType.STRING)
+
     private Role role;
 
-    @OneToMany(mappedBy = "user")
-    private List<Reservation> reservations;
+    private List<ReservationRequestDTO> reservations;
 
     public UserDTO(String username, String firstName, String lastName, String email, String password, String token, Role role) {
         this.username = username;
