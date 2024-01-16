@@ -5,6 +5,9 @@ import com.example.prgeksamenbackendtest.dto.HotelDTO;
 import com.example.prgeksamenbackendtest.models.Hotel.Hotel;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,11 +32,16 @@ public class HotelController {
         return new ResponseEntity<>(createdHotelDTO, HttpStatus.CREATED);
     }
 
-    @GetMapping("/getAll")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<HotelDTO>> getAllHotels() {
-        List<HotelDTO> hotels = hotelService.getAllHotels();
-        return new ResponseEntity<>(hotels, HttpStatus.OK);
+    @GetMapping("/get/all")
+    public ResponseEntity<Page<HotelDTO>> getAllHotels(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) String city) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<HotelDTO> hotelPage = hotelService.getAllHotels(pageable, country, city);
+        return new ResponseEntity<>(hotelPage, HttpStatus.OK);
     }
 
 

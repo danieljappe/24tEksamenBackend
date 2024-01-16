@@ -18,6 +18,7 @@ public class PrgEksamenBackendTestApplication {
     CommandLineRunner init(UserInit userInit) {
         return args -> {
             userInit.initializeAdminAccount();
+            userInit.initializeUserAccount();
         };
     }
 

@@ -9,6 +9,9 @@ import com.example.prgeksamenbackendtest.models.Room.Room;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -32,9 +35,16 @@ public class HotelService {
         return hotel;
     }
 
-    public List<HotelDTO> getAllHotels() {
-        List<Hotel> hotels = hotelRepository.findAll();
-        return hotels.stream().map(this::convertToDTO).collect(Collectors.toList());
+    public Page<HotelDTO> getAllHotels(Pageable pageable, String country, String city) {
+        if (country != null && !country.isEmpty() && city != null && !city.isEmpty()) {
+            return hotelRepository.findByCountryAndCity(country, city, pageable).map(this::convertToDTO);
+        } else if (country != null && !country.isEmpty()) {
+            return hotelRepository.findByCountry(country, pageable).map(this::convertToDTO);
+        } else if (city != null && !city.isEmpty()) {
+            return hotelRepository.findByCity(city, pageable).map(this::convertToDTO);
+        } else {
+            return hotelRepository.findAll(pageable).map(this::convertToDTO);
+        }
     }
 
     public Optional<HotelDTO> getHotelByID(Long hotelID) {
@@ -173,5 +183,13 @@ public class HotelService {
         Hotel hotel = hotelRepository.findById(hotelId).orElseThrow(() -> new EntityNotFoundException("Hotel not found"));
         int numberOfRooms = hotelRepository.countRoomsByHotelId(hotelId);
         return new HotelDTO(hotel.getHotelID(), hotel.getHotelName(), hotel.getStreet(), numberOfRooms);
+    }
+
+    public Page<HotelDTO> getHotelsByCountry(String country, Pageable pageable) {
+        return hotelRepository.findByCountry(country, pageable).map(this::convertToDTO);
+    }
+
+    public Page<HotelDTO> getHotelsByCity(String city, Pageable pageable) {
+        return hotelRepository.findByCity(city, pageable).map(this::convertToDTO);
     }
 }

@@ -47,13 +47,7 @@ public class UserService {
 
     private ReservationRequestDTO convertToReservationDTO(Reservation reservation) {
         // Create a new ReservationRequestDTO object and set its properties from the Reservation entity
-        ReservationRequestDTO reservationDTO = new ReservationRequestDTO();
-
-        reservationDTO.setReservationID(reservation.getReservationID());
-        reservationDTO.setCheckInDate(reservation.getCheckInDate());
-        reservationDTO.setCheckOutDate(reservation.getCheckOutDate());
-        reservationDTO.setRoomID(reservation.getRoom().getRoomID());
-        reservationDTO.setUsername(reservation.getUser().getUsername());
+        ReservationRequestDTO reservationDTO = reservationService.convertToDTO(reservation);
         return reservationDTO;
     }
 

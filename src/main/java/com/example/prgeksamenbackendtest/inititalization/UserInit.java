@@ -30,4 +30,19 @@ public class UserInit {
             userRepository.save(adminUser);
         }
     }
+
+    public void initializeUserAccount() {
+        String username1 = "user1";
+        if (userRepository.findByUsername(username1).isEmpty()) {
+            var user1 = User.builder()
+                    .username(username1)
+                    .firstName("John")
+                    .lastName("Doe")
+                    .email("johndoe@example.com")
+                    .password(passwordEncoder.encode("password"))
+                    .role(Role.USER)
+                    .build();
+            userRepository.save(user1);
+        }
+    }
 }

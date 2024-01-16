@@ -13,19 +13,17 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-
     private final UserRepository repository;
-
     private final PasswordEncoder passwordEncoder;
-
     private final JwtService jwtService;
-
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
         if (request.getUsername() == null || request.getUsername().isEmpty()) {
             throw new IllegalArgumentException("Username must not be null or empty");
         }
+
+        // Build user from Request
         var user = User.builder()
                 .username(request.getUsername())
                 .firstName(request.getFirstName())
@@ -36,21 +34,28 @@ public class AuthenticationService {
                 .build();
         System.out.println("RegisterRequest: " + request);
 
-        System.out.println(user);
+        // Save user to DB
         repository.save(user);
+        System.out.println(user);
+
+        // Generate jwtToken
         var jwtToken = jwtService.generateToken(user);
+
+
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
                         request.getPassword()
                 )
         );
+
         var user = repository.findByUsername(request.getUsername())
                 .orElseThrow();
         var jwtToken = jwtService.generateToken(user);

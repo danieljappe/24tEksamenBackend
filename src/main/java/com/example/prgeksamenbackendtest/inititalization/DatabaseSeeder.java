@@ -9,7 +9,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.Random;
+import java.util.*;
 
 @Component
 public class DatabaseSeeder implements CommandLineRunner {
@@ -22,30 +22,135 @@ public class DatabaseSeeder implements CommandLineRunner {
 
     private Random random = new Random();
 
+    private String[] hotelNames = {
+            "Nordic Lights Hotel",
+            "Royal Oak Resort",
+            "Azure Bay Inn",
+            "Golden Crown Suites",
+            "Emerald Garden Hotel",
+            "Blue Harbor Lodge",
+            "Silver Pine Hotel",
+            "Twilight City Hotel",
+            "Majestic River Hotel",
+            "Serene Valley Resort",
+            // New hotel names
+            "Crimson Peak Lodge",
+            "Oceanfront Oasis Hotel",
+            "Sunset Beach Resort",
+            "Starlight Downtown Hotel",
+            "Harborview Grand Inn",
+            "Mountain Edge Chalet",
+            "Skyline Modern Suites",
+            "Royal Heritage Hotel",
+            "Pinecrest Boutique Hotel",
+            "Urban Retreat Hotel"
+    };
+
+
+
+    private String[] streetNames = {
+            "Elm Street",
+            "Cedar Road",
+            "Seaside Avenue",
+            "Maple Drive",
+            "Highland Street",
+            "Riverbank Lane",
+            "Orchard Boulevard",
+            "Sunrise Way",
+            "Cobblestone Alley",
+            "Marina Path",
+            // New street names
+            "Willow Park Drive",
+            "Lighthouse Point Road",
+            "Canyon View Lane",
+            "Meadowlands Avenue",
+            "Sapphire Shore Drive",
+            "Hillcrest Circle",
+            "Lakeside Terrace",
+            "Windmill Lane",
+            "Autumn Ridge Road",
+            "Fountain Plaza"
+    };
+
+    private String[][][] cityZipCountryPairs = {
+            // Denmark
+            {{"Copenhagen", "1050", "Denmark"}},
+            {{"Aarhus", "8000", "Denmark"}},
+            {{"Odense", "5000", "Denmark"}},
+            {{"Aalborg", "9000", "Denmark"}},
+
+            // Sweden
+            {{"Stockholm", "111 29", "Sweden"}},
+            {{"Gothenburg", "41106", "Sweden"}},
+            {{"Malmo", "21120", "Sweden"}},
+            {{"Uppsala", "753 20", "Sweden"}},
+
+            // Germany
+            {{"Berlin", "10117", "Germany"}},
+            {{"Munich", "80331", "Germany"}},
+            {{"Frankfurt", "60311", "Germany"}},
+            {{"Hamburg", "20095", "Germany"}},
+
+            // Italy
+            {{"Rome", "00184", "Italy"}},
+            {{"Milan", "20121", "Italy"}},
+            {{"Naples", "80133", "Italy"}},
+            {{"Florence", "50123", "Italy"}},
+
+            // France
+            {{"Paris", "75001", "France"}},
+            {{"Lyon", "69002", "France"}},
+            {{"Marseille", "13001", "France"}},
+            {{"Nice", "06000", "France"}},
+
+            // Spain
+            {{"Madrid", "28001", "Spain"}},
+            {{"Barcelona", "08001", "Spain"}},
+            {{"Valencia", "46001", "Spain"}},
+            {{"Seville", "41001", "Spain"}},
+
+            // Netherlands
+            {{"Amsterdam", "1012", "Netherlands"}},
+            {{"Rotterdam", "3011", "Netherlands"}},
+            {{"The Hague", "2511", "Netherlands"}},
+            {{"Eindhoven", "5600", "Netherlands"}}
+    };
+
+
     @Override
     public void run(String... args) throws Exception {
-        seedHotels(250 + 1);
+        seedHotels(150 + 1);
     }
 
     // Metode der laver et antal hoteller
     private void seedHotels(int numberOfHotels) {
-        // For loop der laver et antal hoteller
         for (int i = 1; i < numberOfHotels; i++) {
+            // Select random elements from arrays
+            String hotelName = hotelNames[random.nextInt(hotelNames.length)];
+            String streetName = streetNames[random.nextInt(streetNames.length)];
 
-            // Laver et hotel med et navn, adresse, by, postnummer og land
-            Hotel hotel = new Hotel("Hotel " + i, "Street " + i, "City", "Zip" + i, "Country");
+            // Selecting a random city-zip-country pair
+            int pairIndex = random.nextInt(cityZipCountryPairs.length);
+            String[] selectedPair = cityZipCountryPairs[pairIndex][0];
+            String cityName = selectedPair[0];
+            String zipCode = selectedPair[1];
+            String countryName = selectedPair[2];
 
-            // Sætter createdDate og lastModifiedDate til nu
+            // Create a new hotel
+            Hotel hotel = new Hotel(hotelName, streetName, cityName, zipCode, countryName);
+
+            // Set created and last modified dates
             hotel.setCreatedDate(LocalDateTime.now());
             hotel.setLastModifiedDate(LocalDateTime.now());
 
-            // Gemmer hotellet i databasen
+            // Save hotel to the database
             hotel = hotelRepository.save(hotel);
 
-            // Kalder metoden seedRoomsForHotel med hotellet og et tilfældigt antal rooms (10 til 40 rooms)
+            // Seed rooms for this hotel
             seedRoomsForHotel(hotel, 10 + random.nextInt(31));
         }
     }
+
 
     // Metode der laver et antal rooms for et hotel
     private void seedRoomsForHotel(Hotel hotel, int numberOfRooms) {
