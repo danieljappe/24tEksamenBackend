@@ -20,6 +20,7 @@ public class HotelDTO {
     private String city;
     private String zipCode;
     private String country;
+
     private int numberOfRooms;
     private List<RoomDTO> rooms;
 

@@ -1,70 +1,140 @@
 package com.example.prgeksamenbackendtest;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-
 import com.example.prgeksamenbackendtest.Services.HotelService;
+import com.example.prgeksamenbackendtest.Services.RoomService;
 import com.example.prgeksamenbackendtest.controllers.HotelController;
+import com.example.prgeksamenbackendtest.dto.HotelDTO;
+import com.example.prgeksamenbackendtest.dto.RoomDTO;
 import com.example.prgeksamenbackendtest.models.Hotel.Hotel;
+import com.example.prgeksamenbackendtest.models.Room.Room;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.ResponseEntity;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+@ExtendWith(MockitoExtension.class)
 public class HotelControllerTest {
-
-    private MockMvc mockMvc;
 
     @Mock
     private HotelService hotelService;
 
+    @Mock
+    private RoomService roomService;
+
     @InjectMocks
     private HotelController hotelController;
 
+    private MockMvc mockMvc;
+
     @BeforeEach
     public void setup() {
-        MockitoAnnotations.initMocks(this);
-        this.mockMvc = MockMvcBuilders.standaloneSetup(hotelController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(hotelController).build();
     }
 
     @Test
     public void testCreateHotel() throws Exception {
-        // Opret et hotel objekt
-        Hotel createdHotel = new Hotel();
-        createdHotel.setHotelName("Hotel Name");
-        createdHotel.setStreet("Hotel Street");
-        createdHotel.setCity("Hotel City");
-        createdHotel.setZipCode("Hotel Zip Code");
-        createdHotel.setCountry("Hotel Country");
+        RoomDTO room = new RoomDTO(1L, 1, 3, 400, 1L, false);
+        List<RoomDTO> rooms = new ArrayList<>();
+        rooms.add(room);
 
-        // returner hotel objektet når createHotel metoden kaldes
-        given(hotelService.createHotel(any(Hotel.class))).willReturn(createdHotel);
+        HotelDTO requestHotelDTO = new HotelDTO("Hotel Name", "Hotel Street", "Hotel City", "Hotel Zipcode", "Hotel Country", rooms);
 
-        // Opret et JSON objekt
+        List<Room> entityRooms = new ArrayList<>();
+        entityRooms.add(roomService.convertToEntity(room));
+        Hotel hotelEntity = new Hotel(1L, "Hotel Name", "Hotel Street", "Hotel City", "Hotel ZipCode", "Hotel Country", entityRooms);
+
+        HotelDTO responseHotelDTO = new HotelDTO(1L, "Hotel Name", "Hotel Street", "Hotel City", "Hotel Zipcode", "Hotel Country", rooms.size(), rooms);
+
+        given(hotelService.convertToEntity(requestHotelDTO)).willReturn(hotelEntity);
+        given(hotelService.createHotel(hotelEntity)).willReturn(hotelEntity);
+        given(hotelService.convertToDTO(hotelEntity)).willReturn(responseHotelDTO);
+
         ObjectMapper objectMapper = new ObjectMapper();
-        // Konverter hotel objektet til JSON
-        String hotelJson = objectMapper.writeValueAsString(createdHotel);
+        String hotelJson = objectMapper.writeValueAsString(requestHotelDTO);
 
-        // Forvent at status er 201 (Created) og at JSON objektet er det samme som det der bliver returneret
-        this.mockMvc.perform(post("/api/v1/hotel-controller/create")
-                        .contentType(APPLICATION_JSON)
-                        .content(hotelJson)
-                        .header("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwNTAyODc3MSwiZXhwIjoxNzA1MDMwMjExfQ.nnzl1cG01LzVobqvOvI-1OqtzxumHoS9ywD5ZwVwjHM"))
-                .andDo(MockMvcResultHandlers.print()) // This will print the response details
+        mockMvc.perform(post("/api/v1/hotel-controller/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(hotelJson))
                 .andExpect(status().isCreated())
-                .andExpect(content().json(hotelJson)); // adjust this line based on what you expect in return
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.hotelName").value("Hotel Name"))
+                .andExpect(jsonPath("$.street").value("Hotel Street"))
+                .andExpect(jsonPath("$.city").value("Hotel City"))
+                .andExpect(jsonPath("$.zipCode").value("Hotel Zipcode"))
+                .andExpect(jsonPath("$.country").value("Hotel Country"));
+
+
+        verify(hotelService).convertToEntity(any(HotelDTO.class));
+        verify(hotelService).createHotel(any(Hotel.class));
     }
+
+    @Test
+    public void getHotelByID() throws Exception {
+        // Arrange
+        Long hotelId = 1L;
+        HotelDTO hotelDTO = new HotelDTO(1L, "Hotel Name", "Hotel Street", 4);
+
+        // Setting up mock behavior
+        given(hotelService.getHotelByID(hotelId)).willReturn(Optional.of(hotelDTO));
+
+        // Act & Assert
+        mockMvc.perform(get("/api/v1/hotel-controller/get/{hotelId}", hotelId)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.hotelID").value(hotelDTO.getHotelID()))
+                .andExpect(jsonPath("$.hotelName").value(hotelDTO.getHotelName()))
+                .andExpect(jsonPath("$.street").value(hotelDTO.getStreet()))
+                .andExpect(jsonPath("$.numberOfRooms").value(hotelDTO.getNumberOfRooms()));
+        // Verify interaction with the mock service
+        verify(hotelService).getHotelByID(hotelId);
+    }
+
+    @Test
+    public void testDeleteHotel() throws Exception {
+        // Arrange
+        Long hotelIdToDelete = 1L;
+        boolean deletionResult = true; // Assuming deletion is successful
+
+        // Setting up mock behavior
+        given(hotelService.deleteHotel(hotelIdToDelete)).willReturn(deletionResult);
+
+        // Act & Assert for Successful Deletion
+        mockMvc.perform(delete("/api/v1/hotel-controller/delete/{hotelId}", hotelIdToDelete))
+                .andExpect(status().isNoContent()); // Expecting 204 No Content for successful deletion
+
+        // Verify interaction with the mock service for successful deletion
+        verify(hotelService).deleteHotel(hotelIdToDelete);
+
+        // Arrange for Unsuccessful Deletion
+        Long invalidHotelId = 2L;
+        given(hotelService.deleteHotel(invalidHotelId)).willReturn(false); // Assuming deletion fails
+
+        // Act & Assert for Unsuccessful Deletion
+        mockMvc.perform(delete("/api/v1/hotel-controller/delete/{hotelId}", invalidHotelId))
+                .andExpect(status().isNotFound()); // Expecting 404 Not Found for unsuccessful deletion
+
+        // Verify interaction with the mock service for unsuccessful deletion
+        verify(hotelService).deleteHotel(invalidHotelId);
+    }
+
 }

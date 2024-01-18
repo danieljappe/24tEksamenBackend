@@ -72,48 +72,48 @@ public class DatabaseSeeder implements CommandLineRunner {
             "Fountain Plaza"
     };
 
-    private String[][][] cityZipCountryPairs = {
+    private String[][] cityZipCountryPairs = {
             // Denmark
-            {{"Copenhagen", "1050", "Denmark"}},
-            {{"Aarhus", "8000", "Denmark"}},
-            {{"Odense", "5000", "Denmark"}},
-            {{"Aalborg", "9000", "Denmark"}},
+            {"Copenhagen", "1050", "Denmark"},
+            {"Aarhus", "8000", "Denmark"},
+            {"Odense", "5000", "Denmark"},
+            {"Aalborg", "9000", "Denmark"},
 
             // Sweden
-            {{"Stockholm", "111 29", "Sweden"}},
-            {{"Gothenburg", "41106", "Sweden"}},
-            {{"Malmo", "21120", "Sweden"}},
-            {{"Uppsala", "753 20", "Sweden"}},
+            {"Stockholm", "111 29", "Sweden"},
+            {"Gothenburg", "41106", "Sweden"},
+            {"Malmo", "21120", "Sweden"},
+            {"Uppsala", "753 20", "Sweden"},
 
             // Germany
-            {{"Berlin", "10117", "Germany"}},
-            {{"Munich", "80331", "Germany"}},
-            {{"Frankfurt", "60311", "Germany"}},
-            {{"Hamburg", "20095", "Germany"}},
+            {"Berlin", "10117", "Germany"},
+            {"Munich", "80331", "Germany"},
+            {"Frankfurt", "60311", "Germany"},
+            {"Hamburg", "20095", "Germany"},
 
             // Italy
-            {{"Rome", "00184", "Italy"}},
-            {{"Milan", "20121", "Italy"}},
-            {{"Naples", "80133", "Italy"}},
-            {{"Florence", "50123", "Italy"}},
+            {"Rome", "00184", "Italy"},
+            {"Milan", "20121", "Italy"},
+            {"Naples", "80133", "Italy"},
+            {"Florence", "50123", "Italy"},
 
             // France
-            {{"Paris", "75001", "France"}},
-            {{"Lyon", "69002", "France"}},
-            {{"Marseille", "13001", "France"}},
-            {{"Nice", "06000", "France"}},
+            {"Paris", "75001", "France"},
+            {"Lyon", "69002", "France"},
+            {"Marseille", "13001", "France"},
+            {"Nice", "06000", "France"},
 
             // Spain
-            {{"Madrid", "28001", "Spain"}},
-            {{"Barcelona", "08001", "Spain"}},
-            {{"Valencia", "46001", "Spain"}},
-            {{"Seville", "41001", "Spain"}},
+            {"Madrid", "28001", "Spain"},
+            {"Barcelona", "08001", "Spain"},
+            {"Valencia", "46001", "Spain"},
+            {"Seville", "41001", "Spain"},
 
             // Netherlands
-            {{"Amsterdam", "1012", "Netherlands"}},
-            {{"Rotterdam", "3011", "Netherlands"}},
-            {{"The Hague", "2511", "Netherlands"}},
-            {{"Eindhoven", "5600", "Netherlands"}}
+            {"Amsterdam", "1012", "Netherlands"},
+            {"Rotterdam", "3011", "Netherlands"},
+            {"The Hague", "2511", "Netherlands"},
+            {"Eindhoven", "5600", "Netherlands"}
     };
 
 
@@ -131,7 +131,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 
             // Selecting a random city-zip-country pair
             int pairIndex = random.nextInt(cityZipCountryPairs.length);
-            String[] selectedPair = cityZipCountryPairs[pairIndex][0];
+            String[] selectedPair = cityZipCountryPairs[pairIndex];
             String cityName = selectedPair[0];
             String zipCode = selectedPair[1];
             String countryName = selectedPair[2];

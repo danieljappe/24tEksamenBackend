@@ -3,7 +3,9 @@ package com.example.prgeksamenbackendtest;
 import org.junit.runner.RunWith;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import com.example.prgeksamenbackendtest.models.Hotel.Hotel;
 import com.example.prgeksamenbackendtest.Repositories.HotelRepository;
@@ -64,8 +66,8 @@ public class HotelTest {
         Hotel hotel = new Hotel("The Four Seasons", "1010 Peachtree Street", "Atlanta", "30309", "USA");
         hotel.setCreatedDate(LocalDateTime.now());
         hotel.setLastModifiedDate(LocalDateTime.now());
-        hotelRepository.save(hotel);
 
+        hotelRepository.save(hotel);
         hotelRepository.delete(hotel);
 
         List<Hotel> hotels = hotelRepository.findAll();

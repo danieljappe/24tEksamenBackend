@@ -45,4 +45,5 @@ public class HotelServiceTest {
         assertEquals(10, hotelDTO.getNumberOfRooms());
         // Add more assertions as necessary
     }
+
 }

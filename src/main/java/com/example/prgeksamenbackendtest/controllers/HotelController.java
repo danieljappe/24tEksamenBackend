@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class HotelController {
     @Autowired
     private HotelService hotelService;
 
-    @PostMapping(value = "/create", consumes = "application/json")
+    @PostMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<HotelDTO> createHotel(@RequestBody HotelDTO hotelDTO) {
         Hotel hotelEntity = hotelService.convertToEntity(hotelDTO);
         Hotel createdHotel = hotelService.createHotel(hotelEntity);
